@@ -45,12 +45,12 @@ public class PharmacyRecommendationService {
 
         // 거리 계산 알고리즘을 이용해서
         List<Direction> directions = directionService.buildDirectionList(documentDto);
-        List<Direction> directionsList = directionService.buildDirectionListByCategoryApi(documentDto);
+        List<Direction> directionList = directionService.buildDirectionListByCategoryApi(documentDto);
 
         // 데이터 베이스에 결과값 저장
-        return directionService.saveAll(directionsList)
+        return directionService.saveAll(directionList)
                 .stream()
-                .map(t -> convertToOutputDto(t)) //alt + enter
+                .map(this::convertToOutputDto)
                 .collect(Collectors.toList());
     }
 

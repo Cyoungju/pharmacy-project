@@ -36,8 +36,8 @@ public class DirectionService {
     private final KakaoCategorySearchService kakaoCategorySearchService;
 
     @Transactional
-    public List<Direction> saveAll(List<Direction> directionList){
-        if(CollectionUtils.isEmpty(directionList)) return Collections.emptyList();
+    public List<Direction> saveAll(List<Direction> directionList) {
+        if (CollectionUtils.isEmpty(directionList)) return Collections.emptyList();
         return directionRepository.saveAll(directionList);
     }
 
