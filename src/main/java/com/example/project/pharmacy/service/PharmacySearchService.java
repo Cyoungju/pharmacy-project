@@ -1,5 +1,6 @@
 package com.example.project.pharmacy.service;
 
+import com.example.project.pharmacy.cache.PharmacyRedisTemplateService;
 import com.example.project.pharmacy.dto.PharmacyDto;
 import com.example.project.pharmacy.entity.Pharmacy;
 import lombok.RequiredArgsConstructor;
@@ -16,10 +17,14 @@ public class PharmacySearchService {
 
     private final PharmacyRepositoryService pharmacyRepositoryService;
 
+    private final PharmacyRedisTemplateService pharmacyRedisTemplateService;
 
     public List<PharmacyDto> searchPharmacyDtoList(){
 
-        //radis
+        // 일단 redis에서 먼저 조회가 일어나고, 문제가 발생시 그때 db에서 불러올수 있게 작업 - 이전에 db내용이 redis에 들어가있어야함 PharmacyController
+        // redis
+        List<PharmacyDto> pharmacyDtoList = pharmacyRedisTemplateService.findAll();
+        if(!pharmacyDtoList.isEmpty()) return pharmacyDtoList;
 
 
         //db

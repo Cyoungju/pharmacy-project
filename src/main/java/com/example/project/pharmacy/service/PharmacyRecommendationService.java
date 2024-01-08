@@ -5,12 +5,15 @@ import com.example.project.api.dto.KakaoApiResponseDto;
 import com.example.project.api.service.KakaoAddressSearchService;
 import com.example.project.direction.dto.OutputDto;
 import com.example.project.direction.entity.Direction;
+import com.example.project.direction.service.Base62Service;
 import com.example.project.direction.service.DirectionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.Collections;
 import java.util.List;
@@ -26,6 +29,12 @@ public class PharmacyRecommendationService {
 
     private final KakaoAddressSearchService kakaoAddressSearchService;
     private final DirectionService directionService;
+    private final Base62Service base62Service;
+    private static final String ROAD_VIEW_BASE_URL = "https://map.kakao.com/link/roadview/";
+
+
+    @Value("${pharmacy.recommendation.base.url}")
+    private String baseUrl;
 
 
     // 길안내 메서드
@@ -55,11 +64,15 @@ public class PharmacyRecommendationService {
     }
 
     private OutputDto convertToOutputDto(Direction direction){
+
+
+
+
         return OutputDto.builder()
                 .pharmacyName(direction.getTargetPharmacyName())
                 .pharmacyAddress(direction.getTargetAddress())
-                .directionUrl("ooio")
-                .roadViewUrl("sdas")
+                .directionUrl(baseUrl + base62Service.encodeDirectionId(direction.getId()))
+                .roadViewUrl(ROAD_VIEW_BASE_URL + direction.getTargetLatitude()+","+ direction.getInputLongitude())
                 .distance(String.format("%.2f km", direction.getDistance())) //소수점 두번째 자리수 까지만 노출
                 .build();
     }
